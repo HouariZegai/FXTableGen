@@ -1,0 +1,30 @@
+JFXTextField, JFXTextArea {
+    -fx-font-size: 14px;
+    -jfx-focus-color: #44b691;
+    -fx-prompt-text-fill: #999;
+    -jfx-label-float: true
+}
+
+.box-header {
+    -fx-pref-width: 600px;
+    -fx-background-color: #EFEFEF;
+    -fx-effect: dropshadow(three-pass-box, rgba(100,100,100,1), 2, 0, 0, 0);
+    -fx-background-radius: 2;
+}
+
+.box-title {
+    -fx-font-size: 16px;
+    -fx-text-fill: linear-gradient(from 0% 0% to 100% 200%, repeat, #fcc124 0%, #2196f3 50%);
+}
+
+.sub-box-header {
+    -fx-pref-width: 535px;
+    -fx-background-color: #EFEFEF;
+    -fx-effect: dropshadow(three-pass-box, rgba(100,100,100,1), 2, 0, 0, 0);
+    -fx-background-radius: 2;
+}
+
+.sub-box-title {
+    -fx-font-size: 14px;
+    -fx-text-fill: #888;
+}
