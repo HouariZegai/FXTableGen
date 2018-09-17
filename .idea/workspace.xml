@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/com/houarizegai/generatetablefx/resources/views/ColumnBox.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/GenerateTableFx/com/houarizegai/generatetablefx/java/controllers/MainController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GenerateTableFx/com/houarizegai/generatetablefx/java/controllers/MainController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/GenerateTableFx/com/houarizegai/generatetablefx/resources/views/Main.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/GenerateTableFx/com/houarizegai/generatetablefx/resources/views/Main.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/houarizegai/generatetablefx/java/controllers/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/houarizegai/generatetablefx/java/controllers/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/houarizegai/generatetablefx/resources/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/houarizegai/generatetablefx/resources/css/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/houarizegai/generatetablefx/resources/views/Main.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/houarizegai/generatetablefx/resources/views/Main.fxml" afterDir="false" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -86,13 +80,13 @@
         <counts>
           <entry key="css" value="785" />
           <entry key="fxml" value="17" />
-          <entry key="java" value="3498" />
+          <entry key="java" value="4472" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="CSS" value="785" />
-          <entry key="JAVA" value="3498" />
+          <entry key="JAVA" value="4472" />
           <entry key="XML" value="17" />
         </counts>
       </usages-collector>
@@ -106,8 +100,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/houarizegai/generatetablefx/java/controllers/MainController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="284">
-              <caret line="144" column="1" selection-start-line="144" selection-start-column="1" selection-end-line="144" selection-end-column="1" />
+            <state relative-caret-position="247">
+              <caret line="129" column="25" selection-start-line="129" selection-start-column="25" selection-end-line="129" selection-end-column="25" />
               <folding>
                 <element signature="method#extractDataOfTable#0;class#MainController#0" />
                 <element signature="method#onGenerate#0;class#MainController#0" />
@@ -407,7 +401,7 @@
       <window_info anchor="bottom" id="Terminal" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32824427" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32824427" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -527,8 +521,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/houarizegai/generatetablefx/java/controllers/MainController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="284">
-          <caret line="144" column="1" selection-start-line="144" selection-start-column="1" selection-end-line="144" selection-end-column="1" />
+        <state relative-caret-position="247">
+          <caret line="129" column="25" selection-start-line="129" selection-start-column="25" selection-end-line="129" selection-end-column="25" />
           <folding>
             <element signature="method#extractDataOfTable#0;class#MainController#0" />
             <element signature="method#onGenerate#0;class#MainController#0" />

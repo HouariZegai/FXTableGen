@@ -28,7 +28,7 @@ public class MainController implements Initializable {
     @FXML // This Box contain Boxs of Columns
     private JFXListView columnsBox;
 
-    @FXML
+    @FXML // Counter contain number of column
     private Text txtCounterCol;
 
     @FXML
@@ -42,6 +42,7 @@ public class MainController implements Initializable {
         onAddColumn();
     }
 
+    // Get information from Views and put it in objects
     private void extractDataOfTable() {
 
         columnsTable = new ColumnTable[columnsBox.getItems().size()];
@@ -61,7 +62,7 @@ public class MainController implements Initializable {
         tableInfo.setClassDataName(tableInfo.getTitle().substring(0, 1).toUpperCase() + tableInfo.getTitle().substring(1) + "Table");
     }
 
-    @FXML
+    @FXML // Generate result
     private void onGenerate() {
         extractDataOfTable();
 
@@ -69,17 +70,19 @@ public class MainController implements Initializable {
 
         result.append(generateVariables());
         result.append(generateInitTableMethod());
-
+        result.append(generateClassData());
         resultArea.setText(result.toString());
     }
+
+    /* Start Generation Result part */
 
     private String generateVariables() { // Generate table & column Attribute
         StringBuilder result = new StringBuilder();
 
-        result.append("@FXML\n\tprivate JFXTreeTableView " + tableInfo.getVarName() + ";");
+        result.append("@FXML\nprivate JFXTreeTableView " + tableInfo.getVarName() + ";");
 
         result.append("\n");
-        result.append("@FXML\n\tprivate JFXTreeTableColumn<" + tableInfo.getClassDataName() + ", String> ");
+        result.append("private JFXTreeTableColumn<" + tableInfo.getClassDataName() + ", String> ");
 
         StringBuilder cols = new StringBuilder();
         for(int i = 0; i < columnsTable.length; i++) {
@@ -114,7 +117,7 @@ public class MainController implements Initializable {
         result.append("\t" + tableInfo.getVarName() + ".setPrefWidth(" + tableWidth + ");\n");
         result.append("\t" + tableInfo.getVarName() + ".setShowRoot(false);\n");
 
-        result.append("}");
+        result.append("}\n");
 
         JFXTreeTableView t = new JFXTreeTableView();
 
@@ -122,7 +125,31 @@ public class MainController implements Initializable {
 
     }
 
-    @FXML
+    private String generateClassData() {
+        StringBuilder result = new StringBuilder();
+        result.append("\nclass " + tableInfo.getClassDataName() + " extends RecursiveTreeObject<" + tableInfo.getClassDataName() + "> {\n");
+        for(ColumnTable col : columnsTable) {
+            result.append("\tStringProperty " + col.getTitle() + ";\n");
+        }
+
+        result.append("\n\tpublic " + tableInfo.getClassDataName() + "(");
+        StringBuilder cols = new StringBuilder();
+        for(ColumnTable col : columnsTable) {
+            cols.append("String " + col.getTitle() + ", ");
+        }
+        result.append(cols.substring(0, cols.length() - 2) + ") {\n");
+        for(ColumnTable col : columnsTable) {
+            result.append("\t\tthis." + col.getTitle() + " = new SimpleStringProperty(" + col.getTitle() + ");\n");
+        }
+        result.append("\t}\n");
+        result.append("}"); // close class
+
+        return result.toString();
+    }
+
+    /* End Generation Result part */
+
+    @FXML // Add new column to ListView
     private void onAddColumn() {
         HBox colBox = null;
         try {
@@ -134,7 +161,7 @@ public class MainController implements Initializable {
         txtCounterCol.setText(String.valueOf(columnsBox.getItems().size()));
     }
 
-    @FXML
+    @FXML // Copy the result to the clipboard
     private void onCopy() {
         final Clipboard clipboard = Clipboard.getSystemClipboard();
         final ClipboardContent content = new ClipboardContent();
