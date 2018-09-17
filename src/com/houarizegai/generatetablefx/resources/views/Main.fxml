@@ -16,7 +16,6 @@
             <Label styleClass="box-title" text="TABLE INFORMATION" />
             <HBox spacing="10.0">
                <children>
-                  <JFXTextField fx:id="fieldTableName" promptText="Hame" />
                   <JFXTextField fx:id="fieldTitleTable" promptText="Title" />
                   <JFXTextField />
                </children>

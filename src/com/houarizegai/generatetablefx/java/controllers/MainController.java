@@ -1,5 +1,7 @@
 package com.houarizegai.generatetablefx.java.controllers;
 
+import com.houarizegai.generatetablefx.java.models.ColumnTable;
+import com.houarizegai.generatetablefx.java.models.TableInfo;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,46 +12,92 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
-    @FXML
-    private JFXTextField fieldTableName, fieldTitleTable;
+    @FXML // Title of Table
+    private JFXTextField fieldTitleTable;
 
-    @FXML
+    @FXML // This Box contain Boxs of Columns
     private VBox columnsBox;
 
     @FXML
     private TextArea resultArea;
+
+    private TableInfo tableInfo;
+    private ColumnTable[] columnsTable;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
     }
 
-    @FXML
-    private void onGenerate() {
-        StringBuilder result = new StringBuilder();
+    private void extractDataOfTable() {
 
-        String tableName = fieldTableName.getText().trim();
-        result.append("@FXML\n\tprivate JFXTreeTableView table" +
-                tableName.substring(0, 1).toUpperCase() + tableName.substring(1) + ";");
+        columnsTable = new ColumnTable[columnsBox.getChildren().size()];
 
-        result.append("\n");
-        result.append("@FXML\n\tprivate JFXTreeTableColumn<?, String> ");
-
-        StringBuilder cols = new StringBuilder();
-        for(int i = 0; i < columnsBox.getChildren().size(); i++) {
+        for(int i = 0; i < columnsTable.length; i++) {
             HBox hBox = (HBox) columnsBox.getChildren().get(i);
-            String colTitle = ((JFXTextField) hBox.getChildren().get(1)).getText().trim();
-            String ColWidth = ((JFXTextField) hBox.getChildren().get(2)).getText().trim();
-            cols.append(colTitle + "Col, ");
+            columnsTable[i] = new ColumnTable();
+            columnsTable[i].setTitle(((JFXTextField) hBox.getChildren().get(1)).getText().trim());
+            columnsTable[i].setVarName("col" + columnsTable[i].getTitle().substring(0, 1).toUpperCase()
+            + columnsTable[i].getTitle().substring(1));
+            columnsTable[i].setWidth(((JFXTextField) hBox.getChildren().get(2)).getText().trim());
         }
 
-        result.append(cols.subSequence(0, cols.length() - 2) + ";");
+        tableInfo = new TableInfo();
+        tableInfo.setTitle(fieldTitleTable.getText().trim());
+        tableInfo.setVarName(("table" + tableInfo.getTitle().substring(0, 1).toUpperCase() + tableInfo.getTitle().substring(1)));
+        tableInfo.setClassDataName(tableInfo.getTitle().substring(0, 1).toUpperCase() + tableInfo.getTitle().substring(1) + "Table");
+    }
+
+    @FXML
+    private void onGenerate() {
+        extractDataOfTable();
+
+        StringBuilder result = new StringBuilder();
+
+        result.append(generateVariables());
+        result.append(generateInitTableMethod());
 
         resultArea.setText(result.toString());
+    }
+
+    private String generateVariables() { // Generate table & column Attribute
+        StringBuilder result = new StringBuilder();
+
+        result.append("@FXML\n\tprivate JFXTreeTableView " + tableInfo.getVarName() + ";");
+
+        result.append("\n");
+        result.append("@FXML\n\tprivate JFXTreeTableColumn<" + tableInfo.getClassDataName() + ", String> ");
+
+        StringBuilder cols = new StringBuilder();
+        for(int i = 0; i < columnsTable.length; i++) {
+            cols.append(columnsTable[i].getVarName() + ", ");
+        }
+
+        result.append(cols.subSequence(0, cols.length() - 2) + ";\n");
+
+        return result.toString();
+    }
+
+    private String generateInitTableMethod() {
+        StringBuilder result = new StringBuilder();
+        result.append("\nprivate void initTable() {");
+        for(int i = 0; i < columnsTable.length; i++) {
+            result.append("\n\t" + columnsTable[i].getVarName() + " = new JFXTreeTableColumn<>(\"" + columnsTable[i].getTitle() + "\");");
+            result.append("\n\t" + columnsTable[i].getVarName() + ".setPrefWidth("  + columnsTable[i].getWidth() + ");");
+            result.append("\n\t" + columnsTable[i].getVarName() +
+                    ".setCellValueFactory((TreeTableColumn.CellDataFeatures<" + tableInfo.getClassDataName() + ", String> param) -> param.getValue().getValue()." + columnsTable[i].getTitle() + ");");
+            result.append("\n");
+        }
+
+        
+
+        result.append("}");
+        return result.toString();
     }
 
     @FXML
