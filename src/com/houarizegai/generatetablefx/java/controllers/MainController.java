@@ -4,7 +4,6 @@ import com.houarizegai.generatetablefx.java.models.ColumnTable;
 import com.houarizegai.generatetablefx.java.models.TableInfo;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXTreeTableView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,12 +11,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -25,7 +22,7 @@ public class MainController implements Initializable {
     @FXML // Title of Table
     private JFXTextField fieldTitleTable;
 
-    @FXML // This Box contain Boxs of Columns
+    @FXML // This Box contain boxes of column
     private JFXListView columnsBox;
 
     @FXML // Counter contain number of column
@@ -42,7 +39,7 @@ public class MainController implements Initializable {
         onAddColumn();
     }
 
-    // Get information from Views and put it in objects
+    // Get information from views and put it in objects
     private void extractDataOfTable() {
 
         columnsTable = new ColumnTable[columnsBox.getItems().size()];
@@ -74,22 +71,26 @@ public class MainController implements Initializable {
         resultArea.setText(result.toString());
     }
 
-    /* Start Generation Result part */
+    /* Start generate result part */
 
     private String generateVariables() { // Generate table & column Attribute
         StringBuilder result = new StringBuilder();
 
-        result.append("@FXML\nprivate JFXTreeTableView " + tableInfo.getVarName() + ";");
+        result.append("@FXML\nprivate JFXTreeTableView ")
+                .append(tableInfo.getVarName())
+                .append(";");
 
-        result.append("\n");
-        result.append("private JFXTreeTableColumn<" + tableInfo.getClassDataName() + ", String> ");
+        result.append("\nprivate JFXTreeTableColumn<")
+                .append(tableInfo.getClassDataName())
+                .append(", String> ");
 
         StringBuilder cols = new StringBuilder();
         for(int i = 0; i < columnsTable.length; i++) {
             cols.append(columnsTable[i].getVarName() + ", ");
         }
 
-        result.append(cols.subSequence(0, cols.length() - 2) + ";\n");
+        result.append(cols.subSequence(0, cols.length() - 2))
+                .append(";\n");
 
         return result.toString();
     }
@@ -97,57 +98,98 @@ public class MainController implements Initializable {
     private String generateInitTableMethod() {
         StringBuilder result = new StringBuilder();
         result.append("\nprivate void initTable() {");
+
         for(int i = 0; i < columnsTable.length; i++) {
-            result.append("\n\t" + columnsTable[i].getVarName() + " = new JFXTreeTableColumn<>(\"" + columnsTable[i].getTitle() + "\");");
-            result.append("\n\t" + columnsTable[i].getVarName() + ".setPrefWidth("  + columnsTable[i].getWidth() + ");");
-            result.append("\n\t" + columnsTable[i].getVarName() +
-                    ".setCellValueFactory((TreeTableColumn.CellDataFeatures<" + tableInfo.getClassDataName() + ", String> param) -> param.getValue().getValue()." + columnsTable[i].getTitle() + ");");
+            // Column new object
+            result.append("\n\t" + columnsTable[i].getVarName())
+                    .append(" = new JFXTreeTableColumn<>(\"")
+                    .append(columnsTable[i].getTitle())
+                    .append("\");");
+
+            // Column width
+            result.append("\n\t" + columnsTable[i].getVarName())
+                    .append(".setPrefWidth(")
+                    .append(columnsTable[i].getWidth())
+                    .append(");");
+
+            // Column data
+            result.append("\n\t" + columnsTable[i].getVarName())
+                    .append(".setCellValueFactory((TreeTableColumn.CellDataFeatures<")
+                    .append(tableInfo.getClassDataName())
+                    .append(", String> param) -> param.getValue().getValue().")
+                    .append(columnsTable[i].getTitle())
+                    .append(");");
+
             result.append("\n");
         }
 
         double tableWidth = 0d;
 
-        result.append("\n\t" + tableInfo.getVarName() + ".getColumns().addAll(");
+        /* Adding column to table */
+        result.append("\n\t")
+                .append(tableInfo.getVarName())
+                .append(".getColumns().addAll(");
+
         StringBuilder cols = new StringBuilder();
         for(ColumnTable col : columnsTable) {
-            cols.append(col.getVarName() + ", ");
+            cols.append(col.getVarName()).append(", ");
             tableWidth += Double.parseDouble(col.getWidth());
         }
-        result.append(cols.substring(0, cols.length() - 2) + ");\n");
-        result.append("\t" + tableInfo.getVarName() + ".setPrefWidth(" + tableWidth + ");\n");
-        result.append("\t" + tableInfo.getVarName() + ".setShowRoot(false);\n");
+        result.append(cols.substring(0, cols.length() - 2)).append(");");
 
-        result.append("}\n");
+        // Table width
+        result.append("\n\t" + tableInfo.getVarName())
+                .append(".setPrefWidth(")
+                .append(tableWidth)
+                .append(");");
 
-        JFXTreeTableView t = new JFXTreeTableView();
+        // Make default show root of table
+        result.append("\n\t").append(tableInfo.getVarName())
+                .append(".setShowRoot(false);");
+
+        result.append("\n}\n"); // Close initTable function
 
         return result.toString();
-
     }
 
     private String generateClassData() {
         StringBuilder result = new StringBuilder();
-        result.append("\nclass " + tableInfo.getClassDataName() + " extends RecursiveTreeObject<" + tableInfo.getClassDataName() + "> {\n");
+        result.append("\nclass ")
+                .append(tableInfo.getClassDataName())
+                .append(" extends RecursiveTreeObject<")
+                .append(tableInfo.getClassDataName())
+                .append("> {");
+
         for(ColumnTable col : columnsTable) {
-            result.append("\tStringProperty " + col.getTitle() + ";\n");
+            result.append("\n\tStringProperty ")
+                    .append(col.getTitle())
+                    .append(";");
         }
 
-        result.append("\n\tpublic " + tableInfo.getClassDataName() + "(");
+        result.append("\n\n\tpublic " + tableInfo.getClassDataName() + "(");
         StringBuilder cols = new StringBuilder();
         for(ColumnTable col : columnsTable) {
-            cols.append("String " + col.getTitle() + ", ");
+            cols.append("String ")
+                    .append(col.getTitle())
+                    .append(", ");
         }
-        result.append(cols.substring(0, cols.length() - 2) + ") {\n");
+        result.append(cols.substring(0, cols.length() - 2))
+                .append(") {");
+
         for(ColumnTable col : columnsTable) {
-            result.append("\t\tthis." + col.getTitle() + " = new SimpleStringProperty(" + col.getTitle() + ");\n");
+            result.append("\n\t\tthis.")
+                    .append(col.getTitle())
+                    .append(" = new SimpleStringProperty(")
+                    .append(col.getTitle())
+                    .append(");");
         }
-        result.append("\t}\n");
-        result.append("}"); // close class
+        result.append("\n\t}");
+        result.append("\n}"); // close class
 
         return result.toString();
     }
 
-    /* End Generation Result part */
+    /* End generate result part */
 
     @FXML // Add new column to ListView
     private void onAddColumn() {
