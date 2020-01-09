@@ -65,60 +65,45 @@ public class MainController implements Initializable {
 
         StringBuilder result = new StringBuilder();
 
-        result.append(generateVariables());
-        result.append(generateInitTableMethod());
-        result.append(generateClassData());
+        result.append(genVars())
+                .append(genInitTableMethod())
+                .append(genClassData());
+
         resultArea.setText(result.toString());
     }
 
     /* Start generate result part */
 
-    private String generateVariables() { // Generate table & column Attribute
+    private String genVars() { // generate table & column variables
         StringBuilder result = new StringBuilder();
 
-        result.append("@FXML\nprivate JFXTreeTableView ")
-                .append(tableInfo.getVarName())
-                .append(";");
+        result.append(String.format("@FXML\nprivate JFXTreeTableView %s;", tableInfo.getVarName()));
 
-        result.append("\nprivate JFXTreeTableColumn<")
-                .append(tableInfo.getClassDataName())
-                .append(", String> ");
+        result.append(String.format("\nprivate JFXTreeTableColumn<%s, String> ", tableInfo.getClassDataName()));
 
         StringBuilder cols = new StringBuilder();
         for(int i = 0; i < columnsTable.length; i++) {
-            cols.append(columnsTable[i].getVarName() + ", ");
+            cols.append(columnsTable[i].getVarName()).append(", ");
         }
-
-        result.append(cols.subSequence(0, cols.length() - 2))
-                .append(";\n");
+        result.append(cols.subSequence(0, cols.length() - 2)).append(";\n");
 
         return result.toString();
     }
 
-    private String generateInitTableMethod() {
+    private String genInitTableMethod() {
         StringBuilder result = new StringBuilder();
         result.append("\nprivate void initTable() {");
 
         for(int i = 0; i < columnsTable.length; i++) {
             // Column new object
-            result.append("\n\t" + columnsTable[i].getVarName())
-                    .append(" = new JFXTreeTableColumn<>(\"")
-                    .append(columnsTable[i].getTitle())
-                    .append("\");");
+            result.append(String.format("\n\t%s = new JFXTreeTableColumn<>(\"%s\");", columnsTable[i].getVarName(), columnsTable[i].getTitle()));
 
             // Column width
-            result.append("\n\t" + columnsTable[i].getVarName())
-                    .append(".setPrefWidth(")
-                    .append(columnsTable[i].getWidth())
-                    .append(");");
+            result.append(String.format("\n\t%s.setPrefWidth(%s);", columnsTable[i].getVarName(), columnsTable[i].getWidth()));
 
             // Column data
-            result.append("\n\t" + columnsTable[i].getVarName())
-                    .append(".setCellValueFactory((TreeTableColumn.CellDataFeatures<")
-                    .append(tableInfo.getClassDataName())
-                    .append(", String> param) -> param.getValue().getValue().")
-                    .append(columnsTable[i].getTitle())
-                    .append(");");
+            result.append(String.format("\n\t%s.setCellValueFactory((TreeTableColumn.CellDataFeatures<%s, String> param) -> param.getValue().getValue().%s);",
+                    columnsTable[i].getVarName(), tableInfo.getClassDataName(), columnsTable[i].getTitle()));
 
             result.append("\n");
         }
@@ -126,9 +111,7 @@ public class MainController implements Initializable {
         double tableWidth = 0d;
 
         /* Adding column to table */
-        result.append("\n\t")
-                .append(tableInfo.getVarName())
-                .append(".getColumns().addAll(");
+        result.append(String.format("\n\t%s.getColumns().addAll(", tableInfo.getVarName()));
 
         StringBuilder cols = new StringBuilder();
         for(ColumnTable col : columnsTable) {
@@ -137,53 +120,40 @@ public class MainController implements Initializable {
         }
         result.append(cols.substring(0, cols.length() - 2)).append(");");
 
-        // Table width
-        result.append("\n\t" + tableInfo.getVarName())
-                .append(".setPrefWidth(")
-                .append(tableWidth)
-                .append(");");
+        // table width
+        result.append(String.format("\n\t%s.setPrefWidth(%s);", tableInfo.getVarName(), tableWidth));
 
-        // Make default show root of table
-        result.append("\n\t").append(tableInfo.getVarName())
-                .append(".setShowRoot(false);");
+        // default show root of table
+        result.append(String.format("\n\t%s.setShowRoot(false);", tableInfo.getVarName()));
 
-        result.append("\n}\n"); // Close initTable function
+        // close initTable function
+        result.append("\n}\n");
 
         return result.toString();
     }
 
-    private String generateClassData() {
+    private String genClassData() {
         StringBuilder result = new StringBuilder();
-        result.append("\nclass ")
-                .append(tableInfo.getClassDataName())
-                .append(" extends RecursiveTreeObject<")
-                .append(tableInfo.getClassDataName())
-                .append("> {");
+        result.append(String.format("\nclass %s extends RecursiveTreeObject<%s> {", tableInfo.getClassDataName(), tableInfo.getClassDataName()));
 
         for(ColumnTable col : columnsTable) {
-            result.append("\n\tStringProperty ")
-                    .append(col.getTitle())
-                    .append(";");
+            result.append(String.format("\n\tStringProperty %s;", col.getTitle()));
         }
 
-        result.append("\n\n\tpublic " + tableInfo.getClassDataName() + "(");
+        // constructor method
+        result.append(String.format("\n\n\tpublic %s(", tableInfo.getClassDataName()));
         StringBuilder cols = new StringBuilder();
         for(ColumnTable col : columnsTable) {
-            cols.append("String ")
-                    .append(col.getTitle())
-                    .append(", ");
+            cols.append(String.format("String %s, ", col.getTitle()));
         }
         result.append(cols.substring(0, cols.length() - 2))
                 .append(") {");
 
         for(ColumnTable col : columnsTable) {
-            result.append("\n\t\tthis.")
-                    .append(col.getTitle())
-                    .append(" = new SimpleStringProperty(")
-                    .append(col.getTitle())
-                    .append(");");
+            result.append(String.format("\n\t\tthis.%s = new SimpleStringProperty(%s);", col.getTitle(), col.getTitle()));
         }
-        result.append("\n\t}");
+
+        result.append("\n\t}"); // close constructor
         result.append("\n}"); // close class
 
         return result.toString();
