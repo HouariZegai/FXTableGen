@@ -1,4 +1,4 @@
-package com.houarizegai.generatetablefx.java.models;
+package com.houarizegai.fxtablegen.models;
 
 public class ColumnTable {
     private String title;

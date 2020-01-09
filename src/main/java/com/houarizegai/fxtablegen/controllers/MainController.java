@@ -1,7 +1,7 @@
-package com.houarizegai.generatetablefx.java.controllers;
+package com.houarizegai.fxtablegen.controllers;
 
-import com.houarizegai.generatetablefx.java.models.ColumnTable;
-import com.houarizegai.generatetablefx.java.models.TableInfo;
+import com.houarizegai.fxtablegen.models.ColumnTable;
+import com.houarizegai.fxtablegen.models.TableInfo;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
@@ -165,7 +165,7 @@ public class MainController implements Initializable {
     private void onAddColumn() {
         HBox colBox = null;
         try {
-            colBox = FXMLLoader.load(getClass().getResource("/com/houarizegai/generatetablefx/resources/views/ColumnBox.fxml"));
+            colBox = FXMLLoader.load(getClass().getResource("/fxml/ColumnBox.fxml"));
         } catch(IOException ioe) {
             ioe.printStackTrace();
         }
